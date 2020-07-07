@@ -15,15 +15,17 @@
 @stop
 
 @section('content')
-<h2>予約申し込み</h2>
+<h2>ミーティングを予約</h2>
 <div class="panel panel-default">
-  <div class="panel-heading"><label>「予約日時」の選択</label></div>
+  <div class="panel-heading"><label>「日時」の選択</label></div>
   <div class="panel-body">
     @if($errors->any())
     <div class="alert alert-danger">
+      <ul>
       @foreach($errors->all() as $error)
-        <p>{{ $error }}</p>
+        <li>{{ $error }}</li>
       @endforeach
+      </ul>
     </div>
     @endif
     <div id='calendar'></div>
@@ -33,23 +35,28 @@
 <div class="modal js-modal">
     <div class="modal__bg js-modal-close"></div>
     <div class="modal__content">
-      <form action="/reserve_seat" method="post">
+      <form action="/" method="post">
         {{ csrf_field() }}
         <div class="modal_head"></div>
-        <label>利用人数</label>
-        <select name="number" class="form-control" style="width: 100px">
+        <label>開始時刻</label>
+        <select name="time" class="form-control" style="width: 100px">
         <option disabled selected value>-</option>
-        @for($i = 1;$i <= 10;$i++)
-        <option value="{{ $i }}">{{ $i }}名</option>
+        @for($i = 9;$i <= 17;$i++)
+        <option value="{{ $i }}:00">{{ $i }}:00～</option>
+        <option value="{{ $i }}:30">{{ $i }}:30～</option>
         @endfor
-        </select>
-        <br>
-        <input type="hidden" name="year" value="" class="year">
-        <input type="hidden" name="month" value="" class="month">
-        <input type="hidden" name="day" value="" class="day">
-        <input type="hidden" name="week" value="" class="week">
-        <input type="hidden" name="date_str" value="" class="date_str">
-        <input type="submit" value="この日付で予約する" class="btn btn-primary">
+        </select><br>
+        <label>利用時間</label>
+        <select name="duration" class="form-control" style="width: 100px">
+        <option disabled selected value>-</option>
+        @for($i = 30;$i <= 180;$i += 30)
+        <option value="{{ $i }}">{{ $i }}分</option>
+        @endfor
+        </select><br>
+        <label>議題</label>
+        <input type="text" name="topic" class="form-control"><br>
+        <input type="hidden" value="" name="date" class="date_str">
+        <input type="submit" value="この日時で予約" class="btn btn-primary">
         <button class="btn btn-secondary js-modal-close">戻る</button>
       </form>
     </div>

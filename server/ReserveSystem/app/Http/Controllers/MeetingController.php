@@ -7,46 +7,35 @@ use GuzzleHttp\Client;
 use Lcobucci\JWT\Signer\Hmac\Sha256;
 use Lcobucci\JWT\Signer\Key;
 use Lcobucci\JWT\Builder;
-use App\Models\Meetings;
-use Illuminate\Support\Facades\Auth;
+use Validator;
 
 class MeetingController extends Controller
 {
     public $api_base_url = 'https://api.zoom.us/v2/';
-    public $domain = 'meetings';
-    public function model()
+
+    public function reserve()
     {
-        return Meetings::query();
+        return view('reserve/reserve');
     }
 
-    public function show(Request $request)
+    public function check(Request $request)
     {
-        $items = $this->model()->get();
+        $input = $request->all();
 
-        $params = [
-            'items' => $items,
+        $rules = [
+            'time' => 'required',
+            'duration' => 'required'
         ];
-        return view('list')->with($params);
+        Validator::make($input,$rules)->validate();
+
+        return view('reserve/check')->with('input',$input);
     }
 
-    public function store(Request $request)
+    public function reserveMeeting(Request $request)
     {
         $meeting = $this->create_meeting($request);
-        $form = $this->create_form($meeting);
-        $res = $this->model()->create($form);
-        return back()->with(['params'=>$res]);
-    }
 
-    public function create_form($meeting)
-    {
-        $user = Auth::user();
-        $form = [];
-        $form['title'] = $meeting['topic'];
-        $form['description'] = $meeting['agenda'];
-        $form['meeting_url'] = $meeting['start_url'];
-        $form['join_url'] = $meeting['join_url'];
-        $form['create_user_id'] = $user->id;
-        return $form;
+        return view('reserve/reserve_meeting')->with('meeting',$meeting);
     }
 
     public function create_access_token()
@@ -65,29 +54,26 @@ class MeetingController extends Controller
 
     public function create_meeting(Request $request)
     {
+        $date = $request->date;
+        $time = $request->time;
+        if(isset($request->topic)){
+            $topic = $request->topic;
+        } else {
+            $topic = "";
+        }
         $method = 'POST';
         $user_id = $this->get_users()['id'];
         $url = '/v2/users/'.$user_id.'/meetings';
         $token = $this->create_access_token();
 
         $params = [
-            'topic' => $request->topic,
-            'type' => 1,
+            'topic' => $topic,
+            'type' => 2,
+            'start_time' => $date.'T'.$time.':00',
+            'duration' => $request->duration,
             'time_zone' => 'Asia/Tokyo',
-            'agenda' => $request->agenda,
             'settings' => [
-                'host_video' => false,
-                'participant_video' => true,
-                'cn_meeting' => false,
-                'in_meeting' => false,
-                'mute_upon_entry' => false,
-                'watermark' => false,
-                'use_pmi' => false,
-                'approval_type' => 0,
-                'registration_type' => 0,
-                'audio' => 'both',
-                'enforce_login' => false,
-                'registrants_email_notification' => false
+                'use_pmi' => false
             ]
         ];
         $client_params = [
@@ -122,7 +108,9 @@ class MeetingController extends Controller
                 'Authorization' => 'Bearer '.$token
             ]
         ];
+
         $users = $this->call_api($url,$client_params,$options,$method);
+
         return $users['users'][0];
     }
 

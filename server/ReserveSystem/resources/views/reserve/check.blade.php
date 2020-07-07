@@ -1,56 +1,46 @@
 @extends('layout/layout')
 
+@php
+  $date = $input['date'];
+  $date_str = date('Y年n月j日',strtotime($date));
+  $week = date('w',strtotime($date));
+  $week_str = ['日','月','火','水','木','金','土'];
+@endphp
+
 @section('content')
-<h2>入力内容確認</h2>
+<h2>予約内容確認</h2>
 <div class="panel panel-default">
     <div class="panel-body">
-        <form action="/reserve_done" method="post">
+        <form action="/reserve_meeting" method="post">
         {{ csrf_field() }}
         <div class="form-group">
+            <label>以下の内容でミーティングを作成します。</label>
             <table class="table">
                 <tr>
                 <td>日にち</td>
-                <td>{{ $info['year'] }}年{{ $info['month'] }}月{{ $info['day'] }}日({{ $info['week'] }})</td>
+                <td>{{ $date_str }}({{ $week_str[$week] }})</td>
                 </tr>
                 <tr>
-                <td>時間</td>
-                <td>{{ $info['time'] }}～</td>
+                <td>開始時刻</td>
+                <td>{{ $input['time'] }}～</td>
                 </tr>
                 <tr>
-                <td>人数</td>
-                <td>{{ $info['number'] }}名</td>
+                <td>利用時間</td>
+                <td>{{ $input['duration'] }}分</td>
                 </tr>
                 <tr>
-                <td>座席</td>
-                <td>{{ $info['seat'] }}</td>
-                </tr>
-                <tr>
-                <td>お名前</td>
-                <td>{{ $info['name'] }}</td>
-                </tr>
-                <tr>
-                <td>電話番号</td>
-                <td>{{ $info['tel'] }}</td>
-                </tr>
-                <tr>
-                <td>メールアドレス</td>
-                <td>{{ $info['email'] }}</td>
+                <td>議題</td>
+                <td>@if(isset($input['topic'])) {{ $input['topic'] }} @endif</td>
                 </tr>
             </table>
         </div>
-        <input type="hidden" name="name" value="{{ $info['name'] }}">
-        <input type="hidden" name="tel" value="{{ $info['tel'] }}">
-        <input type="hidden" name="email" value="{{ $info['email'] }}">
-        <input type="hidden" name="date_str" value="{{ $info['date_str'] }}">
-        <input type="hidden" name="time" value="{{ $info['time'] }}">
-        <input type="hidden" name="number" value="{{ $info['number'] }}">
-        <input type="hidden" name="seat" value="{{ $info['seat'] }}">
-        <input type="button" value="戻る" onclick=history.back() class="btn btn-secondary">
+        <input type="hidden" name="date" value="{{ $input['date'] }}">
+        <input type="hidden" name="time" value="{{ $input['time'] }}">
+        <input type="hidden" name="duration" value="{{ $input['duration'] }}">
+        <input type="hidden" name="topic" value="@if(isset($input['topic'])) {{ $input['topic'] }} @endif">
         <input type="submit" value="予約" class="btn btn-primary">
+        <input type="button" value="戻る" onclick=history.back() class="btn btn-secondary">
         </form>
     </div>
 </div>
-@stop
-
-@section('script')
 @stop
