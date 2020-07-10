@@ -8,6 +8,8 @@ use Lcobucci\JWT\Signer\Hmac\Sha256;
 use Lcobucci\JWT\Signer\Key;
 use Lcobucci\JWT\Builder;
 use Validator;
+use App\Models\Zoom;
+use App\Models\Time;
 
 class MeetingController extends Controller
 {
@@ -18,13 +20,35 @@ class MeetingController extends Controller
         return view('reserve/reserve');
     }
 
+    public function ajax(Request $request)
+    {
+        $date = $request->date;
+
+        $result = Time::where('date',$date)->first();
+        $view = view('ajax')->with([
+                                'rec' => $result,
+                                'date' => $date
+                              ]);
+        $view = $view->render();
+
+        return $view;
+    }
+
+    public function input($date)
+    {
+        $date_str = strtotime($date);
+
+        return view('reserve/input')->with('date_time',$date_str);
+    }
+
     public function check(Request $request)
     {
         $input = $request->all();
 
         $rules = [
-            'time' => 'required',
-            'duration' => 'required'
+            'name' => 'required',
+            'tel' => 'required',
+            'email' => 'required'
         ];
         Validator::make($input,$rules)->validate();
 
@@ -34,8 +58,43 @@ class MeetingController extends Controller
     public function reserveMeeting(Request $request)
     {
         $meeting = $this->create_meeting($request);
+        $form = $this->create_form($request,$meeting);
+        $time = $this->create_time($request);
 
         return view('reserve/reserve_meeting')->with('meeting',$meeting);
+    }
+
+    public function create_form(Request $request,$meeting)
+    {
+        $form = new Zoom;
+        $form->name = $request->name;
+        $form->tel = $request->tel;
+        $form->email = $request->email;
+        $form->date = $request->date;
+        $form->start = $request->start;
+        $form->meeting_url = $meeting['start_url'];
+        $form->join_url = $meeting['join_url'];
+        $form->save();
+    }
+
+    public function create_time(Request $request)
+    {
+        $date = $request->date;
+        $start = $request->start;
+        $end = $request->end;
+        $time_record = Time::where('date',$date)->first();
+
+        if($time_record != null){
+            $time_record->$start = '予約済';
+            $time_record->$end = '予約済';
+            $time_record->save();
+        } else {
+            $time = new Time;
+            $time->date = $date;
+            $time->$start = '予約済';
+            $time->$end = '予約済';
+            $time->save();
+        }
     }
 
     public function create_access_token()
@@ -55,22 +114,18 @@ class MeetingController extends Controller
     public function create_meeting(Request $request)
     {
         $date = $request->date;
-        $time = $request->time;
-        if(isset($request->topic)){
-            $topic = $request->topic;
-        } else {
-            $topic = "";
-        }
+        $time = $request->start;
+        $duration = 60;
         $method = 'POST';
         $user_id = $this->get_users()['id'];
         $url = '/v2/users/'.$user_id.'/meetings';
         $token = $this->create_access_token();
 
         $params = [
-            'topic' => $topic,
+            'topic' => $request->name.'様',
             'type' => 2,
             'start_time' => $date.'T'.$time.':00',
-            'duration' => $request->duration,
+            'duration' => $duration,
             'time_zone' => 'Asia/Tokyo',
             'settings' => [
                 'use_pmi' => false

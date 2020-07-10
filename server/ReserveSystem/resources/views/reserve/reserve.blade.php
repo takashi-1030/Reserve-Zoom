@@ -35,30 +35,10 @@
 <div class="modal js-modal">
     <div class="modal__bg js-modal-close"></div>
     <div class="modal__content">
-      <form action="/" method="post">
         {{ csrf_field() }}
         <div class="modal_head"></div>
-        <label>開始時刻</label>
-        <select name="time" class="form-control" style="width: 100px">
-        <option disabled selected value>-</option>
-        @for($i = 9;$i <= 17;$i++)
-        <option value="{{ $i }}:00">{{ $i }}:00～</option>
-        <option value="{{ $i }}:30">{{ $i }}:30～</option>
-        @endfor
-        </select><br>
-        <label>利用時間</label>
-        <select name="duration" class="form-control" style="width: 100px">
-        <option disabled selected value>-</option>
-        @for($i = 30;$i <= 180;$i += 30)
-        <option value="{{ $i }}">{{ $i }}分</option>
-        @endfor
-        </select><br>
-        <label>議題</label>
-        <input type="text" name="topic" class="form-control"><br>
-        <input type="hidden" value="" name="date" class="date_str">
-        <input type="submit" value="この日時で予約" class="btn btn-primary">
-        <button class="btn btn-secondary js-modal-close">戻る</button>
-      </form>
+        <table class="table"></table>
+        <button class="js-modal-close btn btn-secondary">閉じる</button>
     </div>
 </div>
 @stop
@@ -111,12 +91,20 @@
             break;
         }
         var str = info.dateStr;
+        var data = {'date': str};
+        $.ajax({
+          type: 'get',
+          data: data,
+          datatype: 'html',
+          url: '/meeting'
+        })
+        .done(function(view){
+          $('.table').html(view);
+        })
+        .fail(function(result){
+          alert('error');
+        });
         $('.modal_head').html('<h2>' + year + '年' + month + '月' + day + '日（' + week + '）');
-        $('.year').val(year);
-        $('.month').val(month);
-        $('.day').val(day);
-        $('.week').val(week);
-        $('.date_str').val(str);
         $('.js-modal').fadeIn();
       },
     });

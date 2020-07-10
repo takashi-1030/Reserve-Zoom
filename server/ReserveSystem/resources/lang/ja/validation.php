@@ -156,7 +156,9 @@ return [
 
     'attributes' => [
         'time' => '開始時刻',
-        'duration' => '利用時間'
+        'name' => 'お名前',
+        'tel' => '電話番号',
+        'email' => 'メールアドレス'
     ],
 
 ];

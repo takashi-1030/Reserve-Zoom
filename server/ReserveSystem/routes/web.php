@@ -13,8 +13,12 @@
 
 //ユーザー閲覧画面
 Route::get('/', 'MeetingController@reserve');
-Route::post('/', 'MeetingController@check');
+Route::get('/input/{date}', 'MeetingController@input');
+Route::post('/input/check', 'MeetingController@check');
 Route::post('/reserve_meeting', 'MeetingController@reserveMeeting');
+
+//ajax
+Route::get('/meeting', 'MeetingController@ajax');
 
 //zoom API
 Route::get('/zoom_user', 'MeetingController@get_users');

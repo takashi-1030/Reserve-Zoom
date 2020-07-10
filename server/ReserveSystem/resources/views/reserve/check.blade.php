@@ -22,22 +22,28 @@
                 </tr>
                 <tr>
                 <td>開始時刻</td>
-                <td>{{ $input['time'] }}～</td>
+                <td>{{ $input['start'] }}～</td>
                 </tr>
                 <tr>
-                <td>利用時間</td>
-                <td>{{ $input['duration'] }}分</td>
+                <td>お名前</td>
+                <td>{{ $input['name'] }}</td>
                 </tr>
                 <tr>
-                <td>議題</td>
-                <td>@if(isset($input['topic'])) {{ $input['topic'] }} @endif</td>
+                <td>電話番号</td>
+                <td>{{ $input['tel'] }}</td>
+                </tr>
+                <tr>
+                <td>メールアドレス</td>
+                <td>{{ $input['email'] }}</td>
                 </tr>
             </table>
         </div>
         <input type="hidden" name="date" value="{{ $input['date'] }}">
-        <input type="hidden" name="time" value="{{ $input['time'] }}">
-        <input type="hidden" name="duration" value="{{ $input['duration'] }}">
-        <input type="hidden" name="topic" value="@if(isset($input['topic'])) {{ $input['topic'] }} @endif">
+        <input type="hidden" name="start" value="{{ $input['start'] }}">
+        <input type="hidden" name="end" value="{{ $input['end'] }}">
+        <input type="hidden" name="name" value="{{ $input['name'] }}">
+        <input type="hidden" name="tel" value="{{ $input['tel'] }}">
+        <input type="hidden" name="email" value="{{ $input['email'] }}">
         <input type="submit" value="予約" class="btn btn-primary">
         <input type="button" value="戻る" onclick=history.back() class="btn btn-secondary">
         </form>

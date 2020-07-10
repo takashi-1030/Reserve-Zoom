@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateReservesTable extends Migration
+class CreateZoomsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,15 @@ class CreateReservesTable extends Migration
      */
     public function up()
     {
-        Schema::create('reserves', function (Blueprint $table) {
+        Schema::create('zooms', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
             $table->string('tel');
             $table->string('email');
             $table->date('date');
-            $table->time('time');
-            $table->integer('number');
-            $table->integer('seat');
-            $table->string('ok_flg',2)->nullable();
+            $table->time('start');
+            $table->text('meeting_url');
+            $table->string('join_url');
             $table->timestamps();
         });
     }
@@ -34,6 +33,6 @@ class CreateReservesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('reserves');
+        Schema::dropIfExists('zooms');
     }
 }
