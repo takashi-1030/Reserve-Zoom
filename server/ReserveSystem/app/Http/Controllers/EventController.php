@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Reserve;
+use App\Models\Zoom;
 
 class EventController extends Controller
 {
@@ -12,19 +12,14 @@ class EventController extends Controller
         $start = $this->formatDate($request->all()['start']);
         $end = $this->formatDate($request->all()['end']);
 
-        $events = Reserve::select('id','name','date','time','ok_flg')->whereBetween('date',[$start,$end])->get();
+        $events = Zoom::select('name','date','start','meeting_url')->whereBetween('date',[$start,$end])->get();
 
         $newArr = [];
         foreach($events as $item){
-            $newItem["id"] = $item["id"];
             $newItem["title"] = $item["name"].'様';
-            $newItem["start"] = $item["date"].'T'.$item["time"];
-            $newItem["end"] = $item["date"].'T'.$item["time"].'+07:00';
-            if($item['ok_flg'] == 'OK'){
-                $newItem["color"] = 'primary';
-            }else{
-                $newItem["color"] = 'red';
-            }
+            $newItem["start"] = $item["date"].'T'.$item["start"];
+            $newItem["end"] = $item["date"].'T'.$item["time"].'+05:00';
+            $newItem["id"] = $item["meeting_url"];
             $newItem["textColor"] = 'white';
             $newArr[] = $newItem;
         }

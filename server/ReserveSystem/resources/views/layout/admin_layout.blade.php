@@ -20,21 +20,14 @@
 <body>
 <header>
     <nav class="navbar navbar-expand navbar-dark bg-dark mt-3 mb-3">
-        <a href="" class="navbar-brand">予約管理</a>
+        <a href="/admin" class="navbar-brand">予約一覧</a>
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav">
                 <li class="nav-item active">
-                    <a class="nav-link" href="">管理者一覧</a>
-                </li>
-                <li class="nav-item active">
-                    <a class="nav-link" href="">設定</a>
+                    <a class="nav-link" href="/guest">お客様情報一覧</a>
                 </li>
             </ul>
         </div>
-        <form class="form-inline">
-            <input type="search" class="form-control mr-sm-1">
-            <button type="submit" class="btn btn-primary">検索</button>
-        </form>
     </nav>
 </header>
 <main>

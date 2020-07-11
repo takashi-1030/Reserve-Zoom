@@ -33,6 +33,7 @@ class CreateTimesTable extends Migration
             $table->string('16:00')->nullable();
             $table->string('16:30')->nullable();
             $table->string('17:00')->nullable();
+            $table->string('17:30')->nullable();
             $table->timestamps();
         });
     }

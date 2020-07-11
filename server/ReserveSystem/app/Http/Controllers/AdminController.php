@@ -3,15 +3,23 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Reserve;
+use App\Models\Zoom;
 
 class AdminController extends Controller
 {
     public function getIndex()
     {
-        $record = Reserve::where('ok_flg',null)->get();
+        $now = date('Y-m-d');
+        $record = Zoom::where('date',$now)->get();
 
         return view('admin/admin')->with('list',$record);
+    }
+
+    public function guestInfo()
+    {
+        $guest = Zoom::select('name','tel','email')->distinct()->get();
+
+        return view('admin/guest')->with('list',$guest);
     }
 
     public function getReserve($id)

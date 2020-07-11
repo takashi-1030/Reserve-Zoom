@@ -15,7 +15,7 @@
 @stop
 
 @section('content')
-<h2>ミーティングを予約</h2>
+<h2>予約フォーム</h2>
 <div class="panel panel-default">
   <div class="panel-heading"><label>「日時」の選択</label></div>
   <div class="panel-body">

@@ -10,6 +10,7 @@ use Lcobucci\JWT\Builder;
 use Validator;
 use App\Models\Zoom;
 use App\Models\Time;
+use App\Models\Guest;
 
 class MeetingController extends Controller
 {

@@ -8,39 +8,30 @@
 <script src="{{ asset('calendar/packages/daygrid/main.js') }}"></script>
 <script src="{{ asset('calendar/packages/timegrid/main.js') }}"></script>
 <script src="{{ asset('calendar/packages/core/locales-all.js') }}"></script>
-<script src="{{ asset('js/ajax-setup.js') }}"></script>
-<script src="{{ asset('js/event-control.js') }}"></script>
 @stop
 
 @section('styles')
-<link href="{{ asset('css/modal.css') }}" rel="stylesheet">
+<link href="{{ asset('css/event_modal.css') }}" rel="stylesheet">
 @stop
 
 @section('content')
-@if(!empty($list[0]))
-<label>未確定の予約</label>
-<table class="table">
-<tr><th>お客様名</th><th>予約日</th><th>人数</th><th></th></tr>
-@foreach($list as $rec)
-  <tr><td>{{ $rec['name'] }}様</td><td>{{ date('Y年n月j日',strtotime($rec['date'])) }}</td><td>{{ $rec['number'] }}名</td><td><a class="btn btn-primary" role="button" href="/admin/reserve/{{ $rec['id'] }}">詳細を見る</a></td></tr>
-@endforeach
-</table>
+<label>本日の予約</label>
+@if(count($list) >= 1)
+  <table class="table">
+  @foreach($list as $item)
+  <tr>
+  <td>{{ $item['name'] }}様</td>
+  <td>{{ $item['start'] }}</td>
+  <td><a class="btn btn-primary" role="button" href="{{ $item['meeting_url'] }}">ミーティングを開始</a></td>
+  </tr>
+  @endforeach
+  </table>
+@else
+  <p>本日の予約はありません</p>
 @endif
 
 <label>予約カレンダー</label>
 <div id='calendar'></div>
-
-<div class="modal date-modal">
-    <div class="modal__bg js-modal-close"></div>
-    <div class="modal__content">
-        <div class="date_modal_head"></div>
-        <form method="get" action="/admin/add">
-          <input type="hidden" name="date" value="" class="date">
-          <input type="submit" value="この日付で予約を追加" class="btn btn-primary">
-          <button class="btn btn-secondary js-modal-close">戻る</button>
-        </form>
-    </div>
-</div>
 
 <div class="modal event-modal">
     <div class="modal__bg js-modal-close"></div>
@@ -74,38 +65,6 @@
       fixedWeekCount: false,
       locale: 'ja',
       defaultDate: new Date(),
-      dateClick: function(info) {
-        var year = info.date.getFullYear();
-        var month = info.date.getMonth() + 1;
-        var day = info.date.getDate();
-        switch(info.date.getDay()) {
-          case 0:
-            var week = '日';
-            break;
-          case 1:
-            var week = '月';
-            break;
-          case 2:
-            var week = '火';
-            break;
-          case 3:
-            var week = '水';
-            break;
-          case 4:
-            var week = '木';
-            break;
-          case 5:
-            var week = '金';
-            break;
-          case 6:
-            var week = '土';
-            break;
-        }
-        var str = info.dateStr;
-        $('.date_modal_head').html('<h2>' + year + '年' + month + '月' + day + '日（' + week + '）');
-        $('.date').val(str);
-        $('.date-modal').fadeIn();
-      },
       editable: true,
       events: "/setEvent",
       eventClick: function(info) {
@@ -140,11 +99,11 @@
         if(String(minute).length == 1){
           var minute = '0' + String(minute);
         }
-        var event_id = info.event.id;
+        var meeting_url = info.event.id;
         $('.event_date').text(year + '年' + month + '月' + day + '日(' + week + ')');
         $('.event_time').text(hour + ':' + minute + '～');
         $('.event_title').text(info.event.title);
-        $('.link').html('<a class="btn btn-primary" role="button" href="/admin/reserve/' + event_id + '">詳細を見る</a>');
+        $('.link').html('<a class="btn btn-primary" role="button" href="' + meeting_url + '">ミーティングを開く</a>')
         $('.event-modal').fadeIn();
       }
     });

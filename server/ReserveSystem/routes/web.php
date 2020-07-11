@@ -20,5 +20,10 @@ Route::post('/reserve_meeting', 'MeetingController@reserveMeeting');
 //ajax
 Route::get('/meeting', 'MeetingController@ajax');
 
+//管理者画面
+Route::get('/admin', 'AdminController@getIndex');
+Route::get('/setEvent', 'EventController@setEvent');
+Route::get('/guest', 'AdminController@guestInfo');
+
 //zoom API
 Route::get('/zoom_user', 'MeetingController@get_users');
