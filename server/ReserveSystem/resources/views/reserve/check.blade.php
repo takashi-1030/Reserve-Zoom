@@ -41,6 +41,7 @@
         <input type="hidden" name="date" value="{{ $input['date'] }}">
         <input type="hidden" name="start" value="{{ $input['start'] }}">
         <input type="hidden" name="end" value="{{ $input['end'] }}">
+        <input type="hidden" name="margin" value="{{ $input['margin'] }}">
         <input type="hidden" name="name" value="{{ $input['name'] }}">
         <input type="hidden" name="tel" value="{{ $input['tel'] }}">
         <input type="hidden" name="email" value="{{ $input['email'] }}">

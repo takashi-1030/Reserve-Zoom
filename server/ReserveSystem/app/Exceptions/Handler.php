@@ -5,6 +5,7 @@ namespace App\Exceptions;
 use Exception;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Validation\ValidationException;
 
 class Handler extends ExceptionHandler
 {
@@ -19,7 +20,6 @@ class Handler extends ExceptionHandler
         \Symfony\Component\HttpKernel\Exception\HttpException::class,
         \Illuminate\Database\Eloquent\ModelNotFoundException::class,
         \Illuminate\Session\TokenMismatchException::class,
-        \Illuminate\Validation\ValidationException::class,
     ];
 
     /**
@@ -44,7 +44,11 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
-        return parent::render($request, $exception);
+        if($exception instanceof ValidationException) {
+            return parent::render($request,$exception);
+        }
+
+        return response()->view('error');
     }
 
     /**

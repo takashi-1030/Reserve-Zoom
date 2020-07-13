@@ -19,15 +19,6 @@
 <div class="panel panel-default">
   <div class="panel-heading"><label>「日時」の選択</label></div>
   <div class="panel-body">
-    @if($errors->any())
-    <div class="alert alert-danger">
-      <ul>
-      @foreach($errors->all() as $error)
-        <li>{{ $error }}</li>
-      @endforeach
-      </ul>
-    </div>
-    @endif
     <div id='calendar'></div>
   </div>
 </div>
@@ -52,8 +43,9 @@
       plugins: [ 'interaction', 'dayGrid', 'timeGrid' ],
       selectable: true,
       header: {
-        left: 'title',
-        right: 'prev,next today'
+        left: 'prev',
+        center: 'title',
+        right: 'next'
       },
       validRange: function(nowDate) {
         return {

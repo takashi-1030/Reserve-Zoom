@@ -10,7 +10,8 @@ use Lcobucci\JWT\Builder;
 use Validator;
 use App\Models\Zoom;
 use App\Models\Time;
-use App\Models\Guest;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\Notification;
 
 class MeetingController extends Controller
 {
@@ -48,8 +49,8 @@ class MeetingController extends Controller
 
         $rules = [
             'name' => 'required',
-            'tel' => 'required',
-            'email' => 'required'
+            'tel' => 'required|numeric',
+            'email' => 'required|email'
         ];
         Validator::make($input,$rules)->validate();
 
@@ -61,6 +62,9 @@ class MeetingController extends Controller
         $meeting = $this->create_meeting($request);
         $form = $this->create_form($request,$meeting);
         $time = $this->create_time($request);
+        //$mail = $this->send_mail($request,$meeting);
+
+        $request->session()->regenerateToken();
 
         return view('reserve/reserve_meeting')->with('meeting',$meeting);
     }
@@ -83,19 +87,35 @@ class MeetingController extends Controller
         $date = $request->date;
         $start = $request->start;
         $end = $request->end;
+        $margin = $request->margin;
         $time_record = Time::where('date',$date)->first();
 
         if($time_record != null){
+            $time_record->$margin = '予約済';
             $time_record->$start = '予約済';
             $time_record->$end = '予約済';
             $time_record->save();
         } else {
             $time = new Time;
             $time->date = $date;
+            $time->$margin = '予約済';
             $time->$start = '予約済';
             $time->$end = '予約済';
             $time->save();
         }
+    }
+
+    public function send_mail(Request $request,$meeting)
+    {
+        $name = $request->name;
+        $date_str = date('Y年n月j日',strtotime($request->date));
+        $week = date('w',strtotime($request->date));
+        $week_str = ['日','月','火','水','木','金','土'];
+        $date = $date_str.'('.$week_str[$week].')';
+        $start = $request->start;
+        $join_url = $meeting['join_url'];
+        $to = $request->email;
+        Mail::to($to)->send(new Notification($name,$date,$start,$join_url));
     }
 
     public function create_access_token()
