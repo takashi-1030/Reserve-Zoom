@@ -22,6 +22,7 @@ class CreateZoomsTable extends Migration
             $table->time('start');
             $table->text('meeting_url');
             $table->string('join_url');
+            $table->string('meeting_id');
             $table->timestamps();
         });
     }

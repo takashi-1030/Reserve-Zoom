@@ -21,7 +21,7 @@
   @foreach($list as $item)
   <tr>
   <td>{{ $item['name'] }}様</td>
-  <td>{{ $item['start'] }}</td>
+  <td>{{ date('G:i',strtotime($item['start'])) }}～</td>
   <td><a class="btn btn-primary" role="button" href="{{ $item['meeting_url'] }}">ミーティングを開始</a></td>
   </tr>
   @endforeach
@@ -43,6 +43,7 @@
         <tr><td>お名前</td><td class="event_title"></td></tr>
         </table>
         <label class="link"></label>
+        <label class="delete_link"></label>
         <button class="btn btn-secondary js-modal-close">戻る</button>
     </div>
 </div>
@@ -99,11 +100,13 @@
         if(String(minute).length == 1){
           var minute = '0' + String(minute);
         }
-        var meeting_url = info.event.id;
+        var id = info.event.id;
+        var meeting_url = info.event.groupId;
         $('.event_date').text(year + '年' + month + '月' + day + '日(' + week + ')');
         $('.event_time').text(hour + ':' + minute + '～');
         $('.event_title').text(info.event.title);
         $('.link').html('<a class="btn btn-primary" role="button" href="' + meeting_url + '">ミーティングを開く</a>')
+        $('.delete_link').html('<a class="btn btn-danger" role="button" href="admin/delete/' + id + '">予約を取り消す</a>')
         $('.event-modal').fadeIn();
       }
     });

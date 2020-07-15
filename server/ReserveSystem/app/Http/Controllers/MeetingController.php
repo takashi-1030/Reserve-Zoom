@@ -79,6 +79,7 @@ class MeetingController extends Controller
         $form->start = $request->start;
         $form->meeting_url = $meeting['start_url'];
         $form->join_url = $meeting['join_url'];
+        $form->meeting_id = $meeting['id'];
         $form->save();
     }
 
@@ -91,14 +92,18 @@ class MeetingController extends Controller
         $time_record = Time::where('date',$date)->first();
 
         if($time_record != null){
-            $time_record->$margin = '予約済';
+            if($margin != '8:30'){
+                $time_record->$margin = '予約済';
+            }
             $time_record->$start = '予約済';
             $time_record->$end = '予約済';
             $time_record->save();
         } else {
             $time = new Time;
             $time->date = $date;
-            $time->$margin = '予約済';
+            if($margin != '8:30'){
+                $time->$margin = '予約済';
+            }
             $time->$start = '予約済';
             $time->$end = '予約済';
             $time->save();
