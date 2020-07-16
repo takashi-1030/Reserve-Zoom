@@ -42,8 +42,9 @@
         <tr><td>時間</td><td class="event_time"></td></tr>
         <tr><td>お名前</td><td class="event_title"></td></tr>
         </table>
-        <label class="link"></label>
-        <label class="delete_link"></label>
+        <span class="link"></span>
+        <span class="edit_link"></span>
+        <span class="delete_link"></span>
         <button class="btn btn-secondary js-modal-close">戻る</button>
     </div>
 </div>
@@ -106,6 +107,7 @@
         $('.event_time').text(hour + ':' + minute + '～');
         $('.event_title').text(info.event.title);
         $('.link').html('<a class="btn btn-primary" role="button" href="' + meeting_url + '">ミーティングを開く</a>')
+        $('.edit_link').html('<a class="btn btn-success" role="button" href="admin/edit/' + id + '">予約を変更</a>')
         $('.delete_link').html('<a class="btn btn-danger" role="button" href="admin/delete/' + id + '">予約を取り消す</a>')
         $('.event-modal').fadeIn();
       }

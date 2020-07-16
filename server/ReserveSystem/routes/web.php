@@ -17,17 +17,19 @@ Route::get('/input/{date}', 'MeetingController@input');
 Route::post('/input/check', 'MeetingController@check');
 Route::post('/reserve_meeting', 'MeetingController@reserveMeeting');
 
-//ajax
-Route::get('/meeting', 'MeetingController@ajax');
-
 //管理者画面
 Route::get('/admin', 'AdminController@getIndex');
+Route::get('/admin/edit/{id}', 'AdminController@edit');
+Route::post('/admin/edit/{id}', 'AdminController@editCheck');
+Route::post('/admin/edit/done/{id}', 'AdminController@editDone');
 Route::get('/admin/delete/{id}', 'AdminController@delete');
 Route::get('/admin/delete/done/{id}', 'AdminController@deleteDone');
 Route::get('/setEvent', 'EventController@setEvent');
 Route::get('/guest', 'AdminController@guestInfo');
 
+//ajax
+Route::get('/meeting', 'MeetingController@ajax');
+Route::get('/meeting/edit', 'AdminController@ajax');
+
 //zoom API
 Route::get('/zoom_user', 'MeetingController@get_users');
-
-Route::get('/delete', 'MeetingController@delete_meeting');

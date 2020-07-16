@@ -7,7 +7,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class Notification extends Mailable
+class EditNotification extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -23,7 +23,7 @@ class Notification extends Mailable
      */
     public function __construct($name,$date,$start,$join_url)
     {
-        $this->title = sprintf('%s様の予約が完了しました。',$name);
+        $this->title = sprintf('%s様の予約内容を変更しました。',$name);
         $this->date = $date;
         $this->start = $start;
         $this->join_url = $join_url;
@@ -36,7 +36,7 @@ class Notification extends Mailable
      */
     public function build()
     {
-        return $this->text('mail/mail')
+        return $this->text('mail/edit_mail')
                     ->subject($this->title)
                     ->with([
                         'date' => $this->date,
