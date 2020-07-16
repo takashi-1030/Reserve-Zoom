@@ -9,6 +9,15 @@
 <h2>予約内容変更</h2>
 <div class="panel panel-default">
     <div class="panel-body">
+        @if($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+            @foreach($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+            </ul>
+        </div>
+        @endif
         <form action="/admin/edit/{{ $record['id'] }}" method="post">
         {{ csrf_field() }}
         <label>予約日</label>

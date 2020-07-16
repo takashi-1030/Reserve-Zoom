@@ -8,6 +8,7 @@ use App\Models\Time;
 use App\Http\Controllers\MeetingController;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\EditNotification;
+use Validator;
 
 class AdminController extends Controller
 {
@@ -31,6 +32,12 @@ class AdminController extends Controller
     public function editCheck(Request $request,$id)
     {
         $input = $request->all() + ['id' => $id];
+
+        $rules = [
+            'date' => 'required',
+            'start' => 'required',
+        ];
+        Validator::make($input,$rules)->validate();
 
         return view('admin/edit/check')->with('input',$input);
     }

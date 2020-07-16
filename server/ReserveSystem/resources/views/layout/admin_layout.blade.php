@@ -19,7 +19,7 @@
 
 <body>
 <header>
-    <nav class="navbar navbar-expand navbar-dark bg-dark mt-3 mb-3">
+    <nav class="navbar navbar-expand navbar-dark bg-dark mb-3">
         <a href="/admin" class="navbar-brand">予約一覧</a>
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav">
