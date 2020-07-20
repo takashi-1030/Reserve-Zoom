@@ -60,11 +60,11 @@ class MeetingController extends Controller
     public function reserveMeeting(Request $request)
     {
         $request->session()->regenerateToken();
-        
+
         $meeting = $this->create_meeting($request);
         $form = $this->create_form($request,$meeting);
         $time = $this->create_time($request);
-        //$mail = $this->send_mail($request,$meeting);
+        $mail = $this->send_mail($request,$meeting);
 
         return view('reserve/reserve_meeting')->with('meeting',$meeting);
     }

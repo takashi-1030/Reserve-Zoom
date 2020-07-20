@@ -45,7 +45,7 @@ class AdminController extends Controller
     public function editDone(Request $request,$id)
     {
         $request->session()->regenerateToken();
-        
+
         $meeting = new MeetingController;
         $record = Zoom::find($id);
         $date = $request->old_date;
@@ -56,7 +56,7 @@ class AdminController extends Controller
         $edit_form = $this->edit_form($request,$edit_meeting,$record);
         $delete_time = $this->delete_time($date,$time);
         $create_time = $meeting->create_time($request);
-        //$mail = $this->send_mail($request,$join_url);
+        $mail = $this->send_mail($request,$join_url);
 
         return redirect()->action('AdminController@getIndex');
     }
