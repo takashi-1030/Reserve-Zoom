@@ -48,12 +48,12 @@ class Handler extends ExceptionHandler
             return parent::render($request,$exception);
         }
 
-        if($request->is('admin/*')){
-            return response()->view('admin/error');
-        } else {
-            return response()->view('error');
-        }
-        //return parent::render($request, $exception);
+        //if($request->is('admin/*')){
+        //    return response()->view('admin/error');
+        //} else {
+        //    return response()->view('error');
+        //}
+        return parent::render($request, $exception);
     }
 
     /**
