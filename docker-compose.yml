@@ -28,7 +28,7 @@ services:
       - 3022:3306
 
   phpmyadmin:
-    container_name: phpmyadmin
+    container_name: reserve_zoom_phpmyadmin
     image: phpmyadmin/phpmyadmin
     environment:
       - PMA_ARBITRARY=1
