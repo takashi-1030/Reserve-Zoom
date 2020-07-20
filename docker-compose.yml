@@ -5,7 +5,7 @@ services:
     container_name: reserve_zoom_web
     build: ./docker
     ports:
-      - 22:80
+      - 3021:80
     privileged: true
     volumes:
       - ./server:/var/www/html/public
@@ -36,4 +36,4 @@ services:
       - PMA_USER=root
       - PMA_PASSWORD=root
     ports:
-      - 2022:80
+      - 3023:80
