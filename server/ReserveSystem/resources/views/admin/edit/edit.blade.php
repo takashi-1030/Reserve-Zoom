@@ -34,6 +34,7 @@
         </div>
         <input type="hidden" name="old_date" value="{{ $record['date'] }}">
         <input type="hidden" name="old_start" value="{{ $record['start'] }}">
+        <input type="hidden" name="corporate" value="{{ $record['corporate'] }}">
         <input type="hidden" name="name" value="{{ $record['name'] }}">
         <input type="hidden" name="tel" value="{{ $record['tel'] }}">
         <input type="hidden" name="email" value="{{ $record['email'] }}">

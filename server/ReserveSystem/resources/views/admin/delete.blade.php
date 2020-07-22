@@ -19,6 +19,9 @@
         </table>
         <label>お客様情報</label>
         <table class="table">
+            @if($record['corporate'] != null)
+                <tr><th>法人名</th><td>{{ $record['corporate'] }}</td></tr>
+            @endif
             <tr><th>お名前</th><td>{{ $record['name'] }}様</td></tr>
             <tr><th>電話番号</th><td>{{ $record['tel'] }}</td></tr>
             <tr><th>メールアドレス</th><td>{{ $record['email'] }}</td></tr>

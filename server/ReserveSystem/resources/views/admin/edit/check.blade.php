@@ -28,6 +28,12 @@
                 <td>開始時刻</td>
                 <td>{{ $input['start'] }}～</td>
                 </tr>
+                @if($input['corporate'] != null)
+                    <tr>
+                    <td>法人名</td>
+                    <td>{{ $input['corporate'] }}</td>
+                    </tr>
+                @endif
                 <tr>
                 <td>お名前</td>
                 <td>{{ $input['name'] }}様</td>
@@ -48,6 +54,7 @@
         <input type="hidden" name="margin" value="{{ $margin }}">
         <input type="hidden" name="old_date" value="{{ $input['old_date'] }}">
         <input type="hidden" name="old_start" value="{{ $input['old_start'] }}">
+        <input type="hidden" name="corporate" value="{{ $input['corporate'] }}">
         <input type="hidden" name="name" value="{{ $input['name'] }}">
         <input type="hidden" name="tel" value="{{ $input['tel'] }}">
         <input type="hidden" name="email" value="{{ $input['email'] }}">

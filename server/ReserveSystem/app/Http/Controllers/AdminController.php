@@ -83,9 +83,33 @@ class AdminController extends Controller
 
     public function guestInfo()
     {
-        $guest = Zoom::select('name','tel','email')->distinct()->get();
+        $guest = Zoom::select('corporate','name','tel','email')->distinct()->get();
 
         return view('admin/guest')->with('list',$guest);
+    }
+
+    public function search()
+    {
+        return view('admin/search/search');
+    }
+
+    public function searchDone(Request $request)
+    {
+        $date = $request->date;
+        $name = $request->name;
+        $query = Zoom::query();
+
+        if(!empty($date)){
+            $query->where('date',$date)->get();
+        }
+
+        if(!empty($name)){
+            $query->where('name','like','%'.$name.'%')->get();
+        }
+        
+        $record = $query->get();
+
+        return view('admin/search/done')->with('record',$record);
     }
 
     public function ajax(Request $request)
@@ -112,6 +136,11 @@ class AdminController extends Controller
     public function edit_meeting(Request $request,$meeting_id)
     {
         $meeting = new MeetingController;
+        if($request->corporate == null){
+            $name = $request->name;
+        } else {
+            $name = $request->corporate.' '.$request->name;
+        }
         $date = $request->date;
         $time = $request->start;
         $duration = 60;
@@ -120,7 +149,7 @@ class AdminController extends Controller
         $token = $meeting->create_access_token();
 
         $params = [
-            'topic' => $request->name.'様',
+            'topic' => $name.'様',
             'type' => 2,
             'start_time' => $date.'T'.$time.':00',
             'duration' => $duration,
@@ -186,81 +215,17 @@ class AdminController extends Controller
         $start = date('G:i',strtotime($time));
         $end = date('G:i',strtotime('+ 30 minute',strtotime($time)));
         $margin = date('G:i',strtotime('- 30 minute',strtotime($time)));
-        $before = date('G:i',strtotime('- 60 minute',strtotime($time)));
         $time_record = Time::where('date',$date)->first();
 
-        if($before == '8:00'){
-            $time_record->$start = NULL;
-            $time_record->$end = NULL;
-            $time_record->save();
-        } elseif($before == '8:30'){
-            $time_record->$margin = NULL;
+        if($margin == '8:30' || $time_record->$margin == '予約済'){
             $time_record->$start = NULL;
             $time_record->$end = NULL;
             $time_record->save();
         } else {
-            if($time_record->$before == NULL){
-                $time_record->$margin = NULL;
-            }
+            $time_record->$margin = NULL;
             $time_record->$start = NULL;
             $time_record->$end = NULL;
             $time_record->save();
         }
-    }
-
-    //Reserve System
-    public function getReserve($id)
-    {
-        $record = Reserve::find($id);
-
-        return view('admin/reserve')->with(
-            'input', [
-                'id' => $id,
-                'name' => $record->name,
-                'tel' => $record->tel,
-                'email' => $record->email,
-                'date' => $record->date,
-                'time' => $record->time,
-                'number' => $record->number,
-                'seat' => $record->seat,
-                'ok_flg' => $record->ok_flg,
-            ]);
-    }
-
-    public function addReserve(Request $request)
-    {
-        $date = $request->all();
-
-        return view('admin/add/add')->with('date',$date);
-    }
-
-    public function reserveCheck(Request $request)
-    {
-        $input = $request->all();
-
-        return view('admin/add/check')->with('input',$input);
-    }
-    public function addDone(Request $request)
-    {
-        $reserve_record = new Reserve;
-        $reserve_record->name = $request->name;
-        $reserve_record->tel = $request->tel;
-        $reserve_record->email = $request->email;
-        $reserve_record->date = $request->date;
-        $reserve_record->time = $request->time;
-        $reserve_record->number = $request->number;
-        $reserve_record->seat = $request->seat;
-        $reserve_record->save();
-
-        return redirect()->action('AdminController@getIndex');
-    }
-
-    public function reserveConfirm($id)
-    {
-        $reserve_record = Reserve::find($id);
-        $reserve_record->ok_flg = 'OK';
-        $reserve_record->save();
-
-        return redirect()->action('AdminController@getIndex');
     }
 }

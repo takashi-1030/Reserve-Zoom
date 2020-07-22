@@ -24,7 +24,10 @@
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav">
                 <li class="nav-item active">
-                    <a class="nav-link" href="/guest">お客様情報一覧</a>
+                    <a class="nav-link" href="/admin/guest">お客様情報一覧</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="/admin/search">検索</a>
                 </li>
             </ul>
         </div>

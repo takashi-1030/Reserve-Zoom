@@ -15,6 +15,7 @@ class CreateZoomsTable extends Migration
     {
         Schema::create('zooms', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('corporate')->nullable();
             $table->string('name');
             $table->string('tel');
             $table->string('email');

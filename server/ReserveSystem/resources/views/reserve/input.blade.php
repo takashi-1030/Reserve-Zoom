@@ -29,6 +29,10 @@
         <form action="/input/check" method="post">
         {{ csrf_field() }}
         <div class="form-group">
+            <label>法人名</label>
+            <input type="text" name="corporate" class="form-control" value="{{ old('corporate') }}">
+        </div>
+        <div class="form-group">
             <label>お名前（必須）</label>
             <input type="text" name="name" class="form-control @if(!empty($errors->first('name'))) border-danger @endif" value="{{ old('name') }}">
         </div>

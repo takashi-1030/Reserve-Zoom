@@ -59,19 +59,26 @@ class MeetingController extends Controller
 
     public function reserveMeeting(Request $request)
     {
-        $request->session()->regenerateToken();
+        $reserve_check = Time::where('date',$request->date)->first();
+        $start = $request->start;
+        if($reserve_check->$start == '予約済'){
+            return view('error');
+        } else {
+            $request->session()->regenerateToken();
 
-        $meeting = $this->create_meeting($request);
-        $form = $this->create_form($request,$meeting);
-        $time = $this->create_time($request);
-        $mail = $this->send_mail($request,$meeting);
+            $meeting = $this->create_meeting($request);
+            $form = $this->create_form($request,$meeting);
+            $time = $this->create_time($request);
+            $mail = $this->send_mail($request,$meeting);
 
-        return view('reserve/reserve_meeting')->with('meeting',$meeting);
+            return view('reserve/reserve_meeting');
+        }
     }
 
     public function create_form(Request $request,$meeting)
     {
         $form = new Zoom;
+        $form->corporate = $request->corporate;
         $form->name = $request->name;
         $form->tel = $request->tel;
         $form->email = $request->email;
@@ -92,8 +99,8 @@ class MeetingController extends Controller
         $time_record = Time::where('date',$date)->first();
 
         if($time_record != null){
-            if($margin != '8:30'){
-                $time_record->$margin = '予約済';
+            if($margin != '8:30' || $time_record->$margin != '予約済'){
+                $time_record->$margin = 'マージン';
             }
             $time_record->$start = '予約済';
             $time_record->$end = '予約済';
@@ -102,7 +109,7 @@ class MeetingController extends Controller
             $time = new Time;
             $time->date = $date;
             if($margin != '8:30'){
-                $time->$margin = '予約済';
+                $time->$margin = 'マージン';
             }
             $time->$start = '予約済';
             $time->$end = '予約済';
@@ -139,6 +146,11 @@ class MeetingController extends Controller
 
     public function create_meeting(Request $request)
     {
+        if($request->corporate == ''){
+            $name = $request->name;
+        } else {
+            $name = $request->corporate.' '.$request->name;
+        }
         $date = $request->date;
         $time = $request->start;
         $duration = 60;
@@ -148,7 +160,7 @@ class MeetingController extends Controller
         $token = $this->create_access_token();
 
         $params = [
-            'topic' => $request->name.'様',
+            'topic' => $name.'様',
             'type' => 2,
             'start_time' => $date.'T'.$time.':00',
             'duration' => $duration,

@@ -6,4 +6,7 @@
         <option value="{{ $i }}:30">{{ $i }}:30～</option>
     @endif
 @endfor
+@if($rec['17:00'] == NULL)
+    <option value="17:00">17:00～</option>
+@endif
 

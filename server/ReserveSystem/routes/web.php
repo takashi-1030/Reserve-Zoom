@@ -24,8 +24,10 @@ Route::post('/admin/edit/{id}', 'AdminController@editCheck');
 Route::post('/admin/edit/done/{id}', 'AdminController@editDone');
 Route::get('/admin/delete/{id}', 'AdminController@delete');
 Route::get('/admin/delete/done/{id}', 'AdminController@deleteDone');
+Route::get('/admin/guest', 'AdminController@guestInfo');
+Route::get('/admin/search', 'AdminController@search');
+Route::post('/admin/search/done', 'AdminController@searchDone');
 Route::get('/setEvent', 'EventController@setEvent');
-Route::get('/guest', 'AdminController@guestInfo');
 
 //ajax
 Route::get('/meeting', 'MeetingController@ajax');
