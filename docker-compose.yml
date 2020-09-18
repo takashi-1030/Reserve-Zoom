@@ -2,17 +2,17 @@ version: '3'
 
 services:
   web:
-    container_name: zoom_web
+    container_name: web
     build: ./docker
     ports:
-      - 3031:80
+      - 80:80
     privileged: true
     volumes:
       - ./server:/var/www/html/public
 
   db:
     image: mysql:5.7
-    container_name: zoom_db-host
+    container_name: db-host
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: docker-database
@@ -25,15 +25,15 @@ services:
       - ./docker/db/my.cnf:/etc/mysql/conf.d/my.cnf
       - ./docker/db/sql:/docker-entrypoint-initdb.d
     ports:
-      - 3032:3306
+      - 3306:3306
 
   phpmyadmin:
-    container_name: zoom_phpmyadmin
+    container_name: phpmyadmin
     image: phpmyadmin/phpmyadmin
     environment:
       - PMA_ARBITRARY=1
-      - PMA_HOSTS=zoom_db-host
+      - PMA_HOSTS=db-host
       - PMA_USER=root
       - PMA_PASSWORD=root
     ports:
-      - 3033:80
+      - 8080:80

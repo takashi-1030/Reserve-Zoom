@@ -61,7 +61,7 @@ class MeetingController extends Controller
     {
         $reserve_check = Time::where('date',$request->date)->first();
         $start = $request->start;
-        if($reserve_check->$start == '予約済'){
+        if(!empty($reserve_check->$start)){
             return view('error');
         } else {
             $request->session()->regenerateToken();
@@ -99,8 +99,10 @@ class MeetingController extends Controller
         $time_record = Time::where('date',$date)->first();
 
         if($time_record != null){
-            if($margin != '8:30' || $time_record->$margin != '予約済'){
-                $time_record->$margin = 'マージン';
+            if($margin != '8:30'){
+                if($time_record->$margin != '予約済'){
+                    $time_record->$margin = 'マージン';
+                }
             }
             $time_record->$start = '予約済';
             $time_record->$end = '予約済';
